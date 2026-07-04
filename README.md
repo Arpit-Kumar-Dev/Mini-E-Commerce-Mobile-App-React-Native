@@ -1,97 +1,175 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🛍️ ShopApp — React Native E-Commerce Demo
 
-# Getting Started
+A sleek, dark-themed React Native shopping app built with the [Fake Store API](https://fakestoreapi.com). Browse products, search in real time, view detailed product pages, and manage a shopping cart.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## ✨ Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **Product Catalog** — Fetches live product data from the Fake Store API, displayed in a responsive 2-column grid with staggered fade/scale-in animations.
+- **Live Search** — Debounced search bar filters products by title or category as you type.
+- **Pull to Refresh** — Swipe down on the product list to refetch the catalog.
+- **Product Details** — Full product view with image, price, category, star rating, and description.
+- **Global Cart** — Add-to-cart, quantity adjustment, and item removal, powered by React Context so cart state is shared across every screen.
+- **Cart Badge** — Live item count badge on the cart icon in the header.
+- **Loading & Error States** — Graceful loading spinners and retry-able error screens for network failures.
+- **Icon System** — Vector icons via `lucide-react-native` (SVG-based, no native font linking required).
+- **Styling** — Styled with React Native's built-in `StyleSheet.create` API, with shared color/layout tokens centralized in `theme.js`.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+---
+
+## 🧱 Tech Stack
+
+| Category            | Library                                                                 |
+|---------------------|--------------------------------------------------------------------------|
+| Framework            | [React Native](https://reactnative.dev) (Community CLI, no Expo)         |
+| Navigation           | [`@react-navigation/native`](https://reactnavigation.org) + native-stack |
+| Styling              | React Native `StyleSheet.create`                                         |
+| State Management     | React Context API (`CartContext`)                                        |
+| Icons                | [`lucide-react-native`](https://lucide.dev)                              |
+| Gradients            | `react-native-linear-gradient`                                           |
+| Safe Areas           | `react-native-safe-area-context`                                         |
+| Data Source          | [Fake Store API](https://fakestoreapi.com)                               |
+| Language             | JavaScript (JSX)                                                          |
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── App.jsx                  # Root component — navigation stack + CartProvider
+├── CartContext.js           # Global cart state (add/remove/qty via Context API)
+├── ProductList.jsx          # Home screen — grid, search, pull-to-refresh, cart badge
+├── ProductList.styles.js    # Styles for ProductList
+├── ProductCard.jsx          # Animated product card used in the grid
+├── ProductCard.styles.js    # Styles for ProductCard
+├── ProductDetails.jsx       # Single product screen — fetch by id, add to cart
+├── CartSummary.jsx          # Cart screen — line items, quantity controls, checkout
+├── SearchBar.jsx            # Debounced search input with icon
+├── SearchBar.styles.js      # Styles for SearchBar
+├── StateView.jsx            # Reusable full-screen loading/error state
+├── StateView.styles.js      # Styles for StateView
+├── useProducts.js           # Hook: fetch/refresh/retry product list + status machine
+├── useDebouncedValue.js     # Generic debounce hook (used by search)
+├── productsApi.js           # Fetch wrapper for the Fake Store API
+├── theme.js                 # Shared color, layout, and animation constants
+└── app.json                 # App name/display name
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+Make sure your environment is set up per the [React Native environment guide](https://reactnative.dev/docs/set-up-your-environment).
+
+- Node.js ≥ 18
+- Ruby + CocoaPods (iOS only)
+- Android Studio / Xcode
+
+### 2. Install dependencies
 
 ```sh
-# Using npm
+npm install
+```
+
+### 3. iOS only — install CocoaPods
+
+```sh
+cd ios && bundle install && bundle exec pod install && cd ..
+```
+
+### 4. Start Metro
+
+```sh
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### 5. Run the app
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
+**Android**
 ```sh
-# Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
+**iOS**
 ```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🎨 Styling
 
-## Step 3: Modify your app
+This project uses React Native's built-in `StyleSheet.create` API. Each major component has a co-located `*.styles.js` file (e.g. `ProductCard.styles.js`) so styles stay organized without bloating the component file.
 
-Now that you have successfully run the app, let's make changes!
+Shared design tokens live in `theme.js`:
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+- **`COLORS`** — the app's dark color palette (background, accent red, text tones, etc.)
+- **`LAYOUT`** — shared sizing values (card radius, search bar height, image height, etc.)
+- **`ANIMATION`** — timing values used by `ProductCard`'s stagger/fade-in animation
+- **`SEARCH_DEBOUNCE_MS`** — debounce delay for the search bar
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+Import these tokens into any `*.styles.js` file instead of hardcoding values, so the whole app stays visually consistent and easy to re-theme.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+---
 
-## Congratulations! :tada:
+## 🛒 Cart State
 
-You've successfully run and modified your React Native App. :partying_face:
+Cart state lives in `CartContext.js` and is provided at the root of the app in `App.jsx`:
 
-### Now what?
+```jsx
+<CartProvider>
+  <NavigationContainer>...</NavigationContainer>
+</CartProvider>
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Any screen can read/update the cart via the `useCart()` hook:
 
-# Troubleshooting
+```jsx
+const { cartItems, addToCart, removeItem, increaseQty, decreaseQty, clearCart } = useCart();
+```
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- Adding a product already in the cart increments its quantity instead of duplicating it.
+- Quantity can never drop below 1 via the UI controls (use `removeItem` to fully remove an item).
 
-# Learn More
+---
 
-To learn more about React Native, take a look at the following resources:
+## 🔌 API
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+All product data comes from the public [Fake Store API](https://fakestoreapi.com):
+
+| Endpoint | Used in |
+|---|---|
+| `GET /products` | `productsApi.js` → `useProducts.js` → `ProductList.jsx` |
+| `GET /products/:id` | `ProductDetails.jsx` |
+
+No API key or authentication is required.
+
+---
+
+## 🧭 Navigation
+
+Three screens are registered in a native stack navigator (`App.jsx`), with headers hidden in favor of custom in-screen headers:
+
+```
+ProductList  →  ProductDetails  →  CartSummary
+     ↑______________________________|
+     (cart icon in header navigates directly to CartSummary)
+```
+
+---
+
+## 🧩 Known Limitations / Notes
+
+- `placeOrder` in `CartSummary.jsx` currently just shows a success alert — there's no real checkout/payment flow or order persistence.
+- Cart state is in-memory only (Context, not persisted) — it resets on app reload. Consider `AsyncStorage` or a persistence library if you need the cart to survive restarts.
+- No automated tests are currently included.
+
+---
+
+## 📄 License
+
+This project is for learning/demo purposes and uses the free Fake Store API for sample product data.
